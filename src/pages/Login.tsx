@@ -1,29 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-
-if (!import.meta.env.VITE_SUPABASE_URL) {
-  throw new Error('VITE_SUPABASE_URL is required');
-}
-
-if (!import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  throw new Error('VITE_SUPABASE_ANON_KEY is required');
-}
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-    },
-  }
-);
+import { supabase } from "@/integrations/supabase/client";
 
 const Login = () => {
   const [email, setEmail] = useState("");

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { User, createClient } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuthContextType {
   user: User | null;
@@ -8,25 +9,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
-
-if (!import.meta.env.VITE_SUPABASE_URL) {
-  throw new Error('VITE_SUPABASE_URL is required');
-}
-
-if (!import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  throw new Error('VITE_SUPABASE_ANON_KEY is required');
-}
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-    },
-  }
-);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
