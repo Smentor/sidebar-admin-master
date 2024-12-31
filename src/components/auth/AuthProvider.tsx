@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createClientComponentClient, User } from "@supabase/auth-helpers-react";
+import { User, createClient } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -9,10 +9,14 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase, navigate]);
+  }, [navigate]);
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
